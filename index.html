@@ -4,8 +4,54 @@
         <title>JAWA Mileage Calculator</title>
         <meta charset="utf-8">
         <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+        <script>
+            function main() {
+                // Default to today
+                document.getElementById('date_picker').valueAsDate = new Date();
+                updateUrl();
+            }
+            function updateUrl() {
+                const startDate = document.getElementById('date_picker').value; // Format: "year-month-day"
+                const config = document.getElementById('config_combo').value;
+                const result = "app.html?date=" + startDate + "&config=" + config;
+                document.getElementById('generated_url').href = result;
+            }
+        </script>
+        <style>
+            input[type=date], select {
+                width: 100%;
+                padding: 12px 20px;
+                margin: 6px 0;
+                display: inline-block;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+            }
+            div {
+                width: 300px;
+                border-radius: 5px;
+                background-color: #f2f2f2;
+                padding: 16px;
+            }
+        </style>
     </head>
-    <body>
-        <h1>TODO: UI for generating the link</h1>
+    <body onload="main()">
+        <h1>JAWA Mileage Calculator</h1>
+        <div>
+            <h3>1) Select car pickup date:</h3>
+            <input type="date" id="date_picker" onchange="updateUrl()">
+
+            <h3>2) Select duration and mileage:</h3>
+            <select id="config_combo" onchange="updateUrl()">
+                <option value="6-8">6 months / 8000 km</option>
+                <option value="6-12">6 months / 12000 km</option>
+                <option value="6-16">6 months / 16000 km</option>
+                <option value="8-12">8 months / 12000 km</option>
+                <option value="10-8">10 months / 8000 km</option>
+            </select>
+
+            <h3>3) Click & bookmark URL:</h3>
+            <a href="app.html" id="generated_url" target="_blank"><h3>Generated url (opens in new tab)</h3></a>
+        </div>
     </body>
 </html>
