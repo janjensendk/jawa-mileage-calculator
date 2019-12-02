@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>JAWA Mileage Calculator</title>
+        <meta charset="utf-8">
+        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+        <script>
+            // Months are 0-indexed
+            var startDate = new Date(2019, 10, 27);
+            var targetMileage = 12000;
+            var targetMonths = 8;
+            var endDate = new Date(startDate.getTime());
+            endDate.setMonth(endDate.getMonth() + targetMonths);
+
+            function main() {
+                const params = getQueryParams();
+                const months = params.get("months");
+                const milage = params.get("mileage");
+
+                // TODO: Parse date as well (split into start day, month, year?)
+                alert("months: " + months + " mileage: " + milage);
+                setMileage();
+            }
+
+            function setMileage() {
+                totalDays = getDeltaDays(startDate, endDate);
+                daysElapsed = getDeltaDays(startDate, new Date());
+                desiredCurrentMileage = (targetMileage / totalDays) * daysElapsed;
+                document.getElementById("labelDesc").innerText = "The Optimal Mileage:";
+                document.getElementById("labelKm").innerText = Math.floor(desiredCurrentMileage) + ".";
+                document.getElementById("labelMeter").innerText = String(desiredCurrentMileage).split('.')[1].substring(0, 3);
+                setTimeout(setMileage, 300);
+            }
+
+            function getDeltaDays(startDate, endDate) {
+                return (endDate - startDate) / (24 * 60 * 60 * 1000);
+            }
+
+            function getQueryParams() {
+                const result = new Map();
+                // Format: "?field1=value1&field2=value2&field3=value3"
+                const trimmed = window.location.search.substr(1).trim();
+                const pairs = trimmed.split("&");
+                for (let i = 0; i < pairs.length; i++) {
+                    if (pairs[i].length == 0) {
+                        continue;
+                    }
+                    const keyVal = pairs[i].split("=");
+                    if (keyVal.length == 2) {
+                        result.set(keyVal[0].toLowerCase().trim(), keyVal[1].toLowerCase().trim());
+                    }
+                }
+                return result;
+            }
+        </script>
+        <style>
+            img { margin: 3px}
+            h1 { font-weight: bold; font-size: 56px; margin: 0px}
+            #labelDesc { color:black}
+            #labelKm { color:darkblue; font-size: 62px }
+            #labelMeter { color:darkred; font-size: 48px; margin-left: -12px}
+        </style>
+    </head>
+    <body onload="main()">
+<!--
+        <img src="automobil.jpg"/>
+-->
+        <h1>
+            <span id="labelDesc"></span>
+            <span id="labelKm"></span>
+            <span id="labelMeter"></span>
+        </h1>
+    </body>
+</html>
