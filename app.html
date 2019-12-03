@@ -20,11 +20,23 @@
 
                 totalDays = getDeltaDays(startDate, endDate);
                 daysElapsed = getDeltaDays(startDate, new Date());
-                desiredCurrentMileage = (targetMileage / totalDays) * daysElapsed;
-                document.getElementById("labelDesc").innerText = "Ideal Mileage:";
-                document.getElementById("labelKm").innerText = Math.floor(desiredCurrentMileage) + ".";
-                document.getElementById("labelMeter").innerText = String(desiredCurrentMileage).split('.')[1].substring(0, 3);
+
+                if (daysElapsed > 0) {
+                    idealMileage = (targetMileage / totalDays) * daysElapsed;
+                    const km = Math.floor(idealMileage) + ".";
+                    const meter = String(idealMileage).split('.')[1].substring(0, 3);
+                    setUI("Ideal mileage:", km, meter);
+                } else {
+                    setUI("No car yet!", "", "");
+                }
+
                 setTimeout(setMileage, 300);
+            }
+
+            function setUI(desc, km, meter) {
+                document.getElementById("labelDesc").innerText = desc;
+                document.getElementById("labelKm").innerText = km;
+                document.getElementById("labelMeter").innerText = meter;
             }
 
             function getDeltaDays(startDate, endDate) {
