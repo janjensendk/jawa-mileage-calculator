@@ -20,23 +20,28 @@
 
                 totalDays = getDeltaDays(startDate, endDate);
                 daysElapsed = getDeltaDays(startDate, new Date());
+                daysLeft = Math.round(totalDays - daysElapsed);
 
                 if (daysElapsed > 0) {
                     idealMileage = (targetMileage / totalDays) * daysElapsed;
                     const km = Math.floor(idealMileage) + ".";
                     const meter = String(idealMileage).split('.')[1].substring(0, 3);
-                    setUI("Ideal mileage:", km, meter);
+                    const left = daysLeft > 0 ?
+                                ("Approx. " + daysLeft + " day(s) left!") :
+                                ("Exceeded with " + Math.abs(daysLeft) + " day(s) so far!");
+                    setUI("Today's ideal mileage:", km, meter, left);
                 } else {
-                    setUI("No car yet!", "", "");
+                    setUI("No car yet!", "", "", "");
                 }
 
                 setTimeout(setMileage, 300);
             }
 
-            function setUI(desc, km, meter) {
+            function setUI(desc, km, meter, footer) {
                 document.getElementById("labelDesc").innerText = desc;
                 document.getElementById("labelKm").innerText = km;
                 document.getElementById("labelMeter").innerText = meter;
+                document.getElementById("footer").innerText = footer;
             }
 
             function getDeltaDays(startDate, endDate) {
@@ -63,13 +68,14 @@
         <style>
             img { margin: 3px}
             h1 { font-weight: bold; font-size: 56px; margin: 0px}
+            h2 { font-size: 24px; margin: 5px}
             #labelDesc { color:black}
             #labelKm { color:darkblue; font-size: 62px }
             #labelMeter { color:darkred; font-size: 48px; margin-left: -12px}
             div {
                 display: inline-block;
                 border-radius: 5px;
-                background-color: #f2f2f2;
+                background-color: #f0f0f0;
                 padding: 8px;
             }
         </style>
@@ -82,5 +88,6 @@
                 <span id="labelMeter"></span>
             </h1>
         </div>
+        <h2 id="footer"></h2>
     </body>
 </html>
