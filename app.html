@@ -15,26 +15,28 @@
                 const configParts = params.get("config").split("-");
                 const targetMonths = Number.parseInt(configParts[0]);
                 const targetMileage = Number.parseInt(configParts[1] * 1000);
+
+                // End date is start date bumped by X months
                 const endDate = new Date(startDate.getTime());
                 endDate.setMonth(endDate.getMonth() + targetMonths);
 
-                totalDays = getDeltaDays(startDate, endDate);
-                daysElapsed = getDeltaDays(startDate, new Date());
-                daysLeft = Math.round(totalDays - daysElapsed);
+                const totalDays = getDeltaDays(startDate, endDate);
+                const daysElapsed = getDeltaDays(startDate, new Date());
+                const daysLeft = Math.round(totalDays - daysElapsed);
 
                 if (daysElapsed > 0) {
                     idealMileage = (targetMileage / totalDays) * daysElapsed;
                     const km = Math.floor(idealMileage) + ".";
                     const meter = String(idealMileage).split('.')[1].substring(0, 3);
-                    const left = daysLeft > 0 ?
+                    const leftDesc = daysLeft > 0 ?
                                 ("Approx. " + daysLeft + " day(s) left!") :
                                 ("Exceeded with " + Math.abs(daysLeft) + " day(s) so far!");
-                    setUI("Today's ideal mileage:", km, meter, left);
+                    setUI("Today's ideal mileage:", km, meter, leftDesc);
                 } else {
                     setUI("No car yet!", "", "", "");
                 }
 
-                setTimeout(setMileage, 300);
+                setTimeout(setMileage, 300); // 300 ms loop
             }
 
             function setUI(desc, km, meter, footer) {
