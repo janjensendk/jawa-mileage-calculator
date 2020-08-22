@@ -8,12 +8,24 @@
         <link rel="icon" type="image/png" sizes="96x96" href="res/favicon-96x96.png">
         <link rel="apple-touch-icon" sizes="180x180" href="res/apple-touch-icon.png">
         <link rel="manifest" href="res/site.webmanifest">
+        <script type="text/javascript" src="code.js"></script>
         <script>
+
             function main() {
-                // Default to today
-                document.getElementById('date_picker').valueAsDate = new Date();
+                const params = getQueryParams();
+                const datePicker = document.getElementById('date_picker');
+
+                if (params.has("date")) {
+                    datePicker.value = params.get("date");
+                } else {
+                    datePicker.valueAsDate = new Date();
+                }
+
+                const selector = document.getElementById('config_combo');
+                addConfigOptions(selector, params.get("config"));
                 updateUrl();
             }
+
             function updateUrl() {
                 const startDate = document.getElementById('date_picker').value; // Format: "year-month-day"
                 const config = document.getElementById('config_combo').value;
@@ -32,7 +44,7 @@
                 box-sizing: border-box;
                 font-size: 18px;
             }
-            h1 { font-weight: bold; font-size: 40px; margin: 10px}
+            h1 { font-weight: bold; text-decoration: underline; font-size: 40px; margin: 10px}
             h2 { font-weight: bold; font-size: 24px; margin: 2px}
             div {
                 width: 500px;
@@ -50,17 +62,10 @@
 
             <h2>2) Select duration and mileage:</h2>
             <select id="config_combo" onchange="updateUrl()">
-                <option value="4-8">4 months / 8000 km</option>
-                <option value="6-18">6 months / 18000 km</option>
-                <option value="6-12">6 months / 12000 km</option>
-                <option value="8-12">8 months / 12000 km</option>
-                <option value="10-15">10 months / 15000 km</option>
-                <option value="10-12">10 months / 12000 km</option>
-                <option value="10-8">10 months / 8000 km</option>
             </select>
 
             <h2>3) Click & bookmark URL:</h2>
-            <a href="app.html" id="generated_url" target="_blank"><h2>Generated url (opens in new tab)</h2></a>
+            <a href="app.html" id="generated_url"><h2>Generated url</h2></a>
         </div>
     </body>
 </html>

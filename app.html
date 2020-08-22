@@ -8,100 +8,62 @@
         <link rel="icon" type="image/png" sizes="96x96" href="res/favicon-96x96.png">
         <link rel="apple-touch-icon" sizes="180x180" href="res/apple-touch-icon.png">
         <link rel="manifest" href="res/site.webmanifest">
+        <script type="text/javascript" src="code.js"></script>
         <script>
+            function main() {
+                document.getElementById('back_url').href = "index.html" + window.location.search;
+                setMileage();
+            }
 
             function setMileage() {
                 const params = getQueryParams();
                 const startDate = new Date(params.get("date"));
-                const configParts = params.get("config").split("-");
-                const targetMonths = Number.parseInt(configParts[0]);
-                const targetMileage = Number.parseInt(configParts[1] * 1000);
+                const config = params.get("config");
+                const targetMonths = getMonthsFromConfig(config);
+                const targetMileage = getMileageFromConfig(config);
 
-                // End date is start date bumped by X months
-                const endDate = new Date(startDate.getTime());
-                endDate.setMonth(endDate.getMonth() + targetMonths);
+                const result = do_calculation(startDate, targetMonths, targetMileage);
+                document.getElementById("labelDesc").innerText = result.desc;
+                document.getElementById("footer").innerText = result.footer;
 
-                const totalDays = getDeltaDays(startDate, endDate);
-                const idealMileagePerDay = (targetMileage / totalDays);
-                const daysElapsed = getDeltaDays(startDate, new Date());
-                const daysLeft = Math.round(totalDays - daysElapsed);
-                const BUFFER_DAYS = 14;
-                const canReturn = Math.abs(daysLeft) <= BUFFER_DAYS;
-                const daysUntilCanReturn = daysLeft - BUFFER_DAYS;
-                const daysUntilLatestReturn = daysLeft + BUFFER_DAYS;
-
-                if (daysElapsed > 0) {
-                    if (canReturn) {
-                        setUI("The car can be returned now!", "", "", "The ideal mileage would be ~" + targetMileage + " km");
-                    } else {
-                        const idealMileage = idealMileagePerDay * daysElapsed;
-                        const km = Math.floor(idealMileage) + ".";
-                        const meter = String(idealMileage).split('.')[1].substring(0, 3);
-                        const desc = daysUntilCanReturn > 0 ?
-                                    ("Approx. " + daysUntilCanReturn + " day(s) until earliest return!") :
-                                    ("Time exceeded with " + Math.abs(daysUntilLatestReturn) + " day(s), assuming contract extension");
-                        setUI("Today's ideal mileage:", km, meter, desc);
-                    }
+                if (result.km && result.meter) {
+                    document.getElementById("labelKm").innerText = result.km;
+                    document.getElementById("labelMeter").innerText = result.meter;
+                    setTimeout(setMileage, 300);
                 } else {
-                    setUI("No car yet!", "", "", "");
+                    document.getElementById("labelKm").remove();
+                    document.getElementById("labelMeter").remove();
                 }
-
-                setTimeout(setMileage, 300); // 300 ms loop
-            }
-
-            function setUI(desc, km, meter, footer) {
-                document.getElementById("labelDesc").innerText = desc;
-                document.getElementById("labelKm").innerText = km;
-                document.getElementById("labelMeter").innerText = meter;
-                document.getElementById("footer").innerText = footer;
-            }
-
-            function getDeltaDays(startDate, endDate) {
-                return (endDate - startDate) / (24 * 60 * 60 * 1000);
-            }
-
-            function getQueryParams() {
-                const result = new Map();
-                // Format: "?field1=value1&field2=value2&field3=value3"
-                const trimmed = window.location.search.substr(1).trim();
-                const pairs = trimmed.split("&");
-                for (let i = 0; i < pairs.length; i++) {
-                    if (pairs[i].length == 0) {
-                        continue;
-                    }
-                    const keyVal = pairs[i].split("=");
-                    if (keyVal.length == 2) {
-                        result.set(keyVal[0].toLowerCase().trim(), keyVal[1].toLowerCase().trim());
-                    }
-                }
-                return result;
             }
         </script>
         <style>
             img { margin: 3px}
-            h1 { font-weight: bold; font-size: 56px; margin: 0px}
-            h2 { font-size: 32px; margin: 5px}
+            h1 { font-weight: bold; text-decoration: underline; font-size: 40px; margin: 10px}
+            h2 { font-weight: bold; font-size: 32px; margin: 2px}
+            h3 { font-weight: normal; font-size: 24px; margin: 5px}
+
             #labelDesc { color:black}
-            #labelKm { color:darkblue; font-size: 62px }
-            #labelMeter { color:darkred; font-size: 48px; margin-left: -12px}
+            #labelKm { color:darkblue; font-size: 48px }
+            #labelMeter { color:darkred; font-size: 40px; margin-left: -12px}
             div {
                 display: inline-block;
                 border-radius: 5px;
-                background-color: #f0f0f0;
+                background-color: #f1f1f1;
                 padding: 8px;
             }
         </style>
     </head>
-    <body onload="setMileage()">
+    <body onload="main()">
+        <h1>JAWA Mileage Calculator</h1>
         <div>
-            <h1>
+            <h2>
                 <span id="labelDesc"></span>
                 <span id="labelKm"></span>
                 <span id="labelMeter"></span>
-            </h1>
+            </h2>
         </div>
-        <h2 id="footer"></h2>
+        <h3 id="footer"></h2>
         <br/>
-        <a href="index.html" target="_blank"><h2>Source: JAWA Mileage Calculator</h2></a>
+        <a href="index.html" id="back_url"><h3>Change configuration</h3></a>
     </body>
 </html>
