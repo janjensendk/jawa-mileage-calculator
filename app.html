@@ -3,6 +3,7 @@
     <head>
         <title>JAWA Mileage Calculator</title>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="icon" type="image/png" sizes="16x16" href="res/favicon-16x16.png">
         <link rel="icon" type="image/png" sizes="32x32" href="res/favicon-32x32.png">
         <link rel="icon" type="image/png" sizes="96x96" href="res/favicon-96x96.png">
@@ -37,7 +38,6 @@
             }
         </script>
         <style>
-            img { margin: 3px}
             h1 { font-weight: bold; text-decoration: underline; font-size: 40px; margin: 10px}
             h2 { font-weight: bold; font-size: 32px; margin: 2px}
             h3 { font-weight: normal; font-size: 24px; margin: 5px}
@@ -45,7 +45,7 @@
             #labelDesc { color:black}
             #labelKm { color:darkblue; font-size: 48px }
             #labelMeter { color:darkred; font-size: 40px; margin-left: -12px}
-            div {
+            #horizontalDiv {
                 display: inline-block;
                 border-radius: 5px;
                 background-color: #f1f1f1;
@@ -54,8 +54,11 @@
         </style>
     </head>
     <body onload="main()">
-        <h1>JAWA Mileage Calculator</h1>
-        <div>
+        <h1>
+            <img src="res/favicon-32x32.png" alt="logo" />
+            JAWA Mileage Calculator
+        </h1>
+        <div id="horizontalDiv">
             <h2>
                 <span id="labelDesc"></span>
                 <span id="labelKm"></span>
