@@ -1,6 +1,6 @@
 
 function getPossibleConfigs() {
-    return ["4-8", "6-18", "6-12", "8-12", "10-15", "10-12", "10-8"];
+    return ["4-8", "5-10", "6-18", "6-12", "8-12", "10-15", "10-12", "10-8"];
 }
 
 function getQueryParams() {
